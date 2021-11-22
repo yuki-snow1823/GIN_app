@@ -1,9 +1,9 @@
 package main
 
 import (
-	"strconv"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
+	"strconv"
 
 	_ "github.com/mattn/go-sqlite3" // インポートするけど使わない場合 _ を記述
 )
@@ -18,10 +18,19 @@ func main() {
 
 	// Todo一覧
 	router.GET("/todos", func(ctx *gin.Context) {
-			todos := dbGetAllTodo()
-			ctx.HTML(200, "index.html", gin.H{
-					"todos": todos,
-			})
+		todos := dbGetAllTodo()
+		ctx.HTML(200, "index.html", gin.H{
+			"todos": todos,
+		})
+	})
+
+	// Todo追加
+	router.POST("/addtodo", func(ctx *gin.Context) {
+		text := ctx.PostForm("text")
+		status := ctx.PostForm("status")
+		dbInsert(text, status)
+		// 一覧画面に遷移
+		ctx.Redirect(302, "/todos")
 	})
 	router.Run()
 }
