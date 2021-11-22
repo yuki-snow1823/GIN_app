@@ -57,9 +57,47 @@ func dbUpdate(id int, text string, status string) {
 		panic("database can't open :update")
 	}
 	var todo Todo
+	// Firstの実装確認
 	db.First(&todo, id)
 	todo.Text = text
 	todo.Status = status
 	db.Save(&todo)
 	db.Close()
+}
+
+
+// delete DB
+func dbDelete(id int) {
+	db, err := gorm.Open("sqlite3", "todo.sqlite3")
+	if err != nil {
+		panic("database can't open :delete")
+	}
+	var todo Todo
+	db.First(&todo, id)
+	db.Delete(&todo)
+	db.Close()
+}
+
+// todo all
+func dbGetAllTodo() []Todo {
+	db, err := gorm.Open("sqlite3", "todo.sqlite3")
+	if err != nil {
+		panic("database can't open :getAll")
+	}
+	var todos []Todo
+	db.Order("created_at desc").Find(&todos)
+	db.Close()
+	return todos
+}
+
+// todo first
+func dbGetOneTodo(id int) Todo {
+	db, err := gorm.Open("sqlite3", "todo.sqlite3")
+	if err != nil {
+		panic("database can't open :getOne")
+	}
+	var todo Todo
+	db.First(&todo, id)
+	db.Close()
+	return todo
 }
