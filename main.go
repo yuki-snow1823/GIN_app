@@ -31,10 +31,35 @@ type Todo struct {
 
 // DB init setting
 func dbInit() {
-	db, err := gorm.Open("sqlite3", "test.sqlite3")
+	// DBとファイル名
+	db, err := gorm.Open("sqlite3", "todo.sqlite3")
 	if err != nil {
-		panic("database can't open")
+		panic("database can't open :init")
 	}
 	db.AutoMigrate(&Todo{})
 	defer db.Close()
+}
+
+// insert DB
+func dbInsert(text string, status string) {
+	db, err := gorm.Open("sqlite3", "todo.sqlite3")
+	if err != nil {
+		panic("database can't open :insert")
+	}
+	db.Create(&Todo{Text: text, Status: status})
+	defer db.Close()
+}
+
+// update DB
+func dbUpdate(id int, text string, status string) {
+	db, err := gorm.Open("sqlite3", "todo.sqlite3")
+	if err != nil {
+		panic("database can't open :update")
+	}
+	var todo Todo
+	db.First(&todo, id)
+	todo.Text = text
+	todo.Status = status
+	db.Save(&todo)
+	db.Close()
 }
