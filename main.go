@@ -1,6 +1,7 @@
 package main
 
 import (
+	"strconv"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 
@@ -10,16 +11,19 @@ import (
 func main() {
 	router := gin.Default()
 	router.LoadHTMLGlob("templates/*.html")
-	data := "Hello Go/Gin!!"
 
-	router.GET("/", func(ctx *gin.Context) {
-		// 第3引数は渡したいデータかも
-		// ctx.HTML(200, "index.html", gin.H{})
-		ctx.HTML(200, "index.html", gin.H{"data": data})
+	dbInit()
+
+	// TODO: topと遷移ページ作成したい
+
+	// Todo一覧
+	router.GET("/todos", func(ctx *gin.Context) {
+			todos := dbGetAllTodo()
+			ctx.HTML(200, "index.html", gin.H{
+					"todos": todos,
+			})
 	})
-
 	router.Run()
-
 }
 
 // Model Setting
@@ -64,7 +68,6 @@ func dbUpdate(id int, text string, status string) {
 	db.Save(&todo)
 	db.Close()
 }
-
 
 // delete DB
 func dbDelete(id int) {
