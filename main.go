@@ -15,6 +15,7 @@ func main() {
 	dbInit()
 
 	// TODO: topと遷移ページ作成したい
+	// Bookersっぽくする
 
 	// Todo一覧
 	router.GET("/todos", func(ctx *gin.Context) {
@@ -33,6 +34,30 @@ func main() {
 		ctx.Redirect(302, "/todos")
 	})
 	router.Run()
+
+	// Todo詳細画面
+	router.GET("/todos/:id", func(ctx *gin.Context) {
+		n := ctx.Param("id")
+		id, err := strconv.Atoi(n)
+		if err != nil {
+			panic(err)
+		}
+		todo := dbGetOneTodo(id)
+		ctx.HTML(200, "show.html", gin.H{"todo": todo})
+	})
+
+	// todo更新
+	router.POST("/update/:id", func(ctx *gin.Context) {
+		n := ctx.Param("id")
+		id, err := strconv.Atoi(n)
+		if err != nil {
+			panic("ERROR")
+		}
+		text := ctx.PostForm("text")
+		status := ctx.PostForm("status")
+		dbUpdate(id, text, status)
+		ctx.Redirect(302, "/todos")
+	})
 }
 
 // Model Setting
