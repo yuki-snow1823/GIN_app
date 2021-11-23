@@ -58,16 +58,27 @@ func main() {
 		dbUpdate(id, text, status)
 		ctx.Redirect(302, "/todos")
 	})
+
+	// todo 削除確認
+	router.GET("/delete_confirm/:id", func(ctx *gin.Context) {
+		n := ctx.Param("id")
+		id, err := strconv.Atoi(n)
+		if err != nil {
+				panic("todoの削除に失敗しました")
+		}
+		todo := dbGetOneTodo(id)
+		ctx.HTML(200, "delete.html", gin.H{"todo": todo})
+})
 }
 
-// Model Setting
+// Model 設定
 type Todo struct {
 	gorm.Model
 	Text   string
 	Status string
 }
 
-// DB init setting
+// DB init 設定
 func dbInit() {
 	// DBとファイル名
 	db, err := gorm.Open("sqlite3", "todo.sqlite3")
