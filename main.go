@@ -11,11 +11,11 @@ import (
 func main() {
 	router := gin.Default()
 	router.LoadHTMLGlob("templates/*.html")
-
+	router.Static("/assets", "./assets")
+	
 	dbInit()
 
 	// TODO: topと遷移ページ作成したい
-	// Bookersっぽくする
 
 	// Todo一覧
 	router.GET("/todos", func(ctx *gin.Context) {
