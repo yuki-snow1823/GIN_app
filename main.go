@@ -64,11 +64,25 @@ func main() {
 		n := ctx.Param("id")
 		id, err := strconv.Atoi(n)
 		if err != nil {
-				panic("todoの削除に失敗しました")
+			panic("todoの削除確認に失敗しました")
 		}
 		todo := dbGetOneTodo(id)
 		ctx.HTML(200, "delete.html", gin.H{"todo": todo})
-})
+	})
+
+	// todo 削除
+	router.POST("/delete/:id", func(ctx *gin.Context) {
+		n := ctx.Param("id")
+		id, err := strconv.Atoi(n)
+		if err != nil {
+			panic("todoの削除に失敗しました")
+		}
+		dbDelete(id)
+		ctx.Redirect(302, "/todos")
+
+	})
+
+	router.Run()
 }
 
 // Model 設定
