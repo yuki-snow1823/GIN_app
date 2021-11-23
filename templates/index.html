@@ -1,14 +1,40 @@
-<!DOCTYPE html>
-<html lang="ja">
-
-<head>
-  <meta charset="UTF-8">
-  <title>GIN APP</title>
-</head>
-
 <body>
-  <h1>Hello World!!!</h1>
-  <h1>{{.data}}</h1>
-</body>
+	<h1>GIN TodoAPP</h1>
+	<table>
+		<tr>
+			<th>Title</th><th>Status</th>
+		</tr>
 
-</html>
+		{{ range .todos }}
+		<tr>
+			<td><span>{{ .Text }}</span></td>
+			<td><span>{{ .Status }}</span></td>
+			<td><a href="/detail/{{.ID}}">Detail</a></td>
+			<td><a href="/delete_check/{{.ID}}">Delete</a></td>
+		</tr>
+		{{end}}
+	</table>
+
+	<h2>New todo</h2>
+	<form class="new_book" id="new_book" action="/addtodo" method="post">
+
+		<div class="field">
+			<p>Title</p>
+			<input class="todo_title" type="text" name="text" size="30" placeholder="入力してください">
+		</div>
+
+		<div class="field">
+			<p>Status</p>
+			<select class="todo_status" name="status">
+				<option value="未実行">未実行</option>
+				<option value="実行中">実行中</option>
+				<option value="終了">終了</option>
+			</select>
+		</div>
+
+		<div class="actions">
+			<input type="submit" name="commit" value="todo登録" data-disable-with="Create Book" />
+		</div>
+	</form>
+
+</body>
